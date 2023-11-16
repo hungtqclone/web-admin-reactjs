@@ -1,23 +1,61 @@
-import logo from './logo.svg';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter as Router, Route, Navigate, Outlet, Routes } from 'react-router-dom';
+import React, { useState } from 'react';
+
+import Login from './components/users/Login';
+import List from './components/news/List';
+import Add from './components/news/Add';
+import Edit from './components/news/Edit';
 
 function App() {
+
+  //đọc thông tin user từ localStorage
+  const getUserFromLocalStorage = () => {
+    const userString = localStorage.getItem('user');
+    if (userString) {
+      return JSON.parse(userString);
+    }
+    return null
+  }
+
+  //Lưu thông tin user vào localStorage
+  const saveUserToLocalStorage = (userInfo) => {
+    if (!userInfo) {
+      localStorage.removeItem('user');
+      setUser(null);
+      return
+    }
+    localStorage.setItem('user', JSON.stringify(userInfo));
+    setUser(userInfo);
+  }
+  const [user, setUser] = useState(getUserFromLocalStorage);
+  //những components phải đăng nhập mới được truy cập
+  const ProtectedRoute = () => {
+    if (user) {
+      return <Outlet />
+    }
+    return <Navigate to="/login" />
+  }
+  const PublicRoute = () => {
+    if (user) {
+      return <Navigate to="/" />
+    }
+    return <Outlet />
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <Router>
+        <Routes>
+          <Route element={<PublicRoute />}>
+            <Route path="/login" element={<Login saveUser={saveUserToLocalStorage} />} />
+          </Route>
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<List />} />
+            <Route path="/add" element={<Add user={user} />} />
+            <Route path="/edit/:id" element={<Edit />} />
+          </Route>
+        </Routes>
+      </Router>
     </div>
   );
 }
