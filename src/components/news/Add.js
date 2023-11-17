@@ -2,7 +2,7 @@ import AxiosInstance from "../helper/AxiosIntance";
 import React, { useEffect, useState } from "react";
 
 const Add = (props) => {
-    const { user } = props;
+    const { user, setReload } = props;
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
@@ -48,7 +48,8 @@ const Add = (props) => {
                 user_id: user_Id
             }
             const result = await AxiosInstance().post('/add-new.php', body);
-            console.log(result);
+            alert("thêm tin tức thành công");
+            setReload(true);
         } catch (error) {
             console.log(error);
         }
@@ -56,7 +57,7 @@ const Add = (props) => {
     }
     return (
         <div>
-            <h1>add</h1>
+            <h1>Add</h1>
             <form>
                 <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /><br />
                 <input type="text" value={content} onChange={(e) => setContent(e.target.value)} /><br />

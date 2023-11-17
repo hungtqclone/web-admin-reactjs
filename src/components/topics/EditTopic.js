@@ -1,6 +1,6 @@
 import React from "react";
 
-const Edit = (props) => {
+const EditTopic = (props) => {
     return (
         <div>
             <h1>Edit</h1>
@@ -8,4 +8,4 @@ const Edit = (props) => {
     )
 }
 
-export default Edit;
+export default EditTopic;
