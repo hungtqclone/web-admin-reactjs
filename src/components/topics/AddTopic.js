@@ -1,10 +1,11 @@
 import AxiosInstance from "../helper/AxiosIntance";
 import React, { useState } from "react";
+import swal from "sweetalert";
 
 const AddTopic = (props) => {
     const { setReload, setNotification } = props;
-    const [name, setName] = useState('');
-    const [description, setDescription] = useState('')
+    const [name, setName] = useState(undefined);
+    const [description, setDescription] = useState(undefined)
 
     // const [topics, setTopics] = useState([]);
     // useEffect(() => {
@@ -16,26 +17,40 @@ const AddTopic = (props) => {
     // }, []);
 
     const handleAddTopic = async () => {
-        try {
-            if (!name || !description) {
-                alert("Vui lòng nhập đầy đủ thông tin");
-                return;
-            }
-            const body = {
-                name: name,
-                description: description
-            }
-            const result = await AxiosInstance().post('/add-topics.php', body);
-            if (result) {
-                setReload(true);
-                setNotification("Thêm mới topic thành công!");
-                setTimeout(() => {
-                    setNotification('');
-                }, 2000);
-            }
-        } catch (error) {
-            console.log(error);
-        }
+
+        swal({
+            title: "Xác nhận thêm mới!",
+            text: "Thêm mới 1 topics",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(async (will) => {
+                if (will) {
+                    try {
+                        if (!name || !description) {
+                            swal("Vui lòng nhập đầy đủ thông tin");
+                            return;
+                        }
+                        const body = {
+                            name: name,
+                            description: description
+                        }
+                        const result = await AxiosInstance().post('/add-topics.php', body);
+                        if (result) {
+                            setReload(true);
+                            setNotification("Thêm mới topic thành công!");
+                            setTimeout(() => {
+                                setNotification('');
+                            }, 2000);
+                        }
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    swal("Thêm mới thất bại!");
+                }
+            });
 
     }
     return (

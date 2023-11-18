@@ -53,9 +53,9 @@ function App() {
             <Route path="/login" element={<Login saveUser={saveUserToLocalStorage} />} />
           </Route>
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<List user={user} />} />
+            <Route path="/" element={<List user={user} saveUser={saveUserToLocalStorage} />} />
             {/* <Route path="/add" element={<Add user={user} />} /> */}
-            <Route path="/edit/:id" element={<Edit />} />
+            {/* <Route path="/edit/:id" element={<Edit />} /> */}
             {/* <Route path="/" element={<News user={user} />} /> */}
             <Route path="/list-topics" element={<Topics />} />
           </Route>

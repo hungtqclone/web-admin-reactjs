@@ -1,3 +1,4 @@
+import swal from "sweetalert";
 import AxiosInstance from "../helper/AxiosIntance";
 import React, { useEffect, useState } from "react";
 
@@ -35,24 +36,39 @@ const Add = (props) => {
     }, []);
 
     const handleAdd = async () => {
-        try {
-            if (!title || !content || !image) {
-                alert("Vui lòng nhập đầy đủ thông tin");
-                return;
-            }
-            const body = {
-                title: title,
-                content: content,
-                image: image,
-                topic_id: topic_Id,
-                user_id: user_Id
-            }
-            const result = await AxiosInstance().post('/add-new.php', body);
-            alert("thêm tin tức thành công");
-            setReload(true);
-        } catch (error) {
-            console.log(error);
-        }
+
+        swal({
+            title: "Xác nhận thêm mới!",
+            text: "Thêm mới 1 tin tức",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(async (will) => {
+                if (will) {
+                    try {
+                        if (!title || !content || !image) {
+                            swal("Vui lòng nhập đầy đủ thông tin");
+                            return;
+                        }
+                        const body = {
+                            title: title,
+                            content: content,
+                            image: image,
+                            topic_id: topic_Id,
+                            user_id: user_Id
+                        }
+                        const result = await AxiosInstance().post('/add-new.php', body);
+                        swal("thêm tin tức thành công");
+                        setReload(true);
+
+                    } catch (error) {
+                        console.log(error);
+                    }
+                } else {
+                    swal("Thêm mới thất bại!");
+                }
+            });
 
     }
     return (

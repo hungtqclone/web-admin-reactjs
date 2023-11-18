@@ -2,7 +2,7 @@ import AxiosInstance from "../helper/AxiosIntance";
 import React, { useState, useEffect, img } from "react";
 
 const Edit = (props) => {
-    const { user, newById } = props;
+    const { user, newById, setReload } = props;
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
@@ -53,6 +53,7 @@ const Edit = (props) => {
             }
             const result = await AxiosInstance().post('/update-new.php?id=' + newById.id, body);
             alert(result.message)
+            setReload(true)
         } catch (error) {
             console.log(error);
         }

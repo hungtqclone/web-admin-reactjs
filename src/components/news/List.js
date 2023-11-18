@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import AxiosInstance from "../helper/AxiosIntance";
 import Add from "./Add";
 import Edit from "./Edit";
+import swal from 'sweetalert';
 const List = (props) => {
-    const { user } = props;
+    const { user, saveUser } = props;
     const [news, setNews] = useState([])
     const [reload, setReload] = useState(false);
     const [newById, setNewById] = useState([]);
@@ -21,13 +22,28 @@ const List = (props) => {
 
     const deleteNews = async (newsId) => {
 
-        // alert("Delete new id = " + newsId.target.id);
+        swal({
+            title: "Xác nhận xóa?",
+            text: "Xóa 1 tin tức",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then(async (willDelete) => {
+                if (willDelete) {
+                    const result = await AxiosInstance().get('/delete-new.php?id=' + newsId);
+                    if (result.status) {
+                        swal("Xóa thành công!");
+                        setReload(true);
+                    } else {
+                        swal("Xóa thất bại!");
+                    }
 
-        // var answer = window.confirm("Delete new id = " + newsId.target.id);
-        if (window.confirm("Delete new id = " + newsId)) {
-            await AxiosInstance().get('/delete-new.php?id=' + newsId);
-            setReload(true);
-        }
+                } else {
+
+                }
+            });
+
 
     }
     const editNews = async (newsId, index) => {
@@ -57,6 +73,7 @@ const List = (props) => {
                 <li><a href="/list-topics">Topics</a></li>
                 <li><a href="#contact">Contact</a></li>
                 <li><a href="#about">About</a></li>
+                <li style={{ position: "absolute", top: 11, right: 100 }}><button onClick={() => saveUser(null)}>Đăng xuất</button></li>
             </ul>
             <div style={{ display: formAdd }}>
                 <Add user={user} setReload={setReload} />
