@@ -67,6 +67,7 @@ const ListTopic = () => {
     return (
 
         <div>
+
             <p style={{ textAlign: "center", background: "#33FF66", marginTop: 10, color: "white", fontSize: 20 }}>{notification}</p>
 
             <div style={{ display: formAdd }}>

@@ -9,7 +9,7 @@ const News = (props) => {
             <ul>
                 <li><a class="active" href="/">News</a></li>
                 <li><a href="/list-topics">Topics</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="#contact">Thống kê</a></li>
                 <li><a href="#about">About</a></li>
             </ul>
             <List user={user} />

@@ -9,6 +9,8 @@ import Edit from './components/news/Edit';
 import ListTopic from './components/topics/ListTopic';
 import News from './components/news/news';
 import Topics from './components/topics/topics';
+import ThongKe from './components/ThongKe';
+import ResetPassword from './components/users/ResetPassword';
 
 function App() {
 
@@ -51,13 +53,15 @@ function App() {
         <Routes>
           <Route element={<PublicRoute />}>
             <Route path="/login" element={<Login saveUser={saveUserToLocalStorage} />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<List user={user} saveUser={saveUserToLocalStorage} />} />
             {/* <Route path="/add" element={<Add user={user} />} /> */}
             {/* <Route path="/edit/:id" element={<Edit />} /> */}
             {/* <Route path="/" element={<News user={user} />} /> */}
-            <Route path="/list-topics" element={<Topics />} />
+            <Route path="/list-topics" element={<Topics saveUser={saveUserToLocalStorage} />} />
+            <Route path="/thong-ke" element={<ThongKe saveUser={saveUserToLocalStorage} />} />
           </Route>
         </Routes>
       </Router>

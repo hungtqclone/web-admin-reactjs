@@ -71,7 +71,7 @@ const List = (props) => {
             <ul>
                 <li><a class="active" href="/">News</a></li>
                 <li><a href="/list-topics">Topics</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="/thong-ke">Thống kê</a></li>
                 <li><a href="#about">About</a></li>
                 <li style={{ position: "absolute", top: 11, right: 100 }}><button onClick={() => saveUser(null)}>Đăng xuất</button></li>
             </ul>
