@@ -3,6 +3,8 @@ import AxiosInstance from "../helper/AxiosIntance";
 import Add from "./Add";
 import Edit from "./Edit";
 import swal from 'sweetalert';
+import Swal from 'react-sweetalert2';
+
 const List = (props) => {
     const { user, saveUser } = props;
     const [news, setNews] = useState([])
@@ -10,10 +12,12 @@ const List = (props) => {
     const [newById, setNewById] = useState([]);
     const [formAdd, setFormAdd] = useState("none");
     const [formEdit, setFormEdit] = useState("none")
+    const [data, setData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             const result = await AxiosInstance().get('/get-new.php');
+
             setNews(result);
         }
         fetchData();
@@ -65,7 +69,25 @@ const List = (props) => {
         setNewById(result);
 
     }
+    const testEditNews = async () => {
+        console.log("open edit news");
+        swal.withForm({
+            title: 'Cool Swal-Forms example',
+            text: 'Any text that you consider useful for the form',
+            showCancelButton: true,
+            confirmButtonColor: '#DD6B55',
+            confirmButtonText: 'Get form data!',
+            closeOnConfirm: true,
+            formFields: [
+                { id: 'name', placeholder: 'Name Field', required: true },
+                { id: 'nickname', placeholder: 'Add a cool nickname' }
+            ]
+        }, function (isConfirm) {
+            // do whatever you want with the form data
+            console.log(this.swalForm) // { name: 'user name', nickname: 'what the user sends' }
+        })
 
+    }
     return (
         <div>
             <ul>
@@ -105,7 +127,7 @@ const List = (props) => {
                                 <td>{item.content}</td>
                                 <td>
 
-                                    <button className='btn btn-primary' value={item.id} onClick={(e) => editNews(e.target.value, index)}>Sửa</button>
+                                    <button className='btn btn-primary' value={item.id} onClick={(e) => testEditNews()}>Sửa</button>
 
                                     <button className='btn btn-danger' value={item.id} onClick={(e) => deleteNews(e.target.value)} >Xóa</button>
                                     <br />
