@@ -1,8 +1,11 @@
 import AxiosInstance from "../helper/AxiosIntance";
 import React, { useState, useEffect, img } from "react";
+import { Button, Modal, Form } from 'react-bootstrap';
+import swal from 'sweetalert';
+
 
 const Edit = (props) => {
-    const { user, newById, setReload } = props;
+    const { user, id, setReload } = props;
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState('');
@@ -11,6 +14,13 @@ const Edit = (props) => {
     const imgloading = "https://www.icegif.com/wp-content/uploads/2023/07/icegif-1263.gif"
     const [imageInput, setImageInput] = useState('');
     const [imagePreview, setImagePreview] = useState('')
+    // const [newById, setNewById] = useState([]);
+
+
+    const [showDialog, setShowDialog] = useState(false);
+
+    const handleShowDialog = () => setShowDialog(true);
+    const handleCloseDialog = () => setShowDialog(false);
     const handleImageChange = async (e) => {
         //hiển thị hình ảnh
         const file = e.target.files[0];
@@ -29,6 +39,8 @@ const Edit = (props) => {
     useEffect(() => {
         const fetchData = async () => {
             const result = await AxiosInstance().get('/get-topics.php');
+            const newById = await AxiosInstance().get(`/get-new-detail.php?id=${id}`);
+
             setTopics(result);
             setTitle(newById.title);
             setContent(newById.content);
@@ -37,7 +49,7 @@ const Edit = (props) => {
             setTopic_Id(newById.topic_id);
         }
         fetchData();
-    }, [props]);
+    }, [id]);
     const handleUpdateNews = async () => {
         try {
             if (!title || !content || !image) {
@@ -51,8 +63,10 @@ const Edit = (props) => {
                 topic_id: topic_Id,
                 user_id: user_Id
             }
-            const result = await AxiosInstance().post('/update-new.php?id=' + newById.id, body);
-            alert(result.message)
+            const result = await AxiosInstance().post('/update-new.php?id=' + id, body);
+            // alert(result.message)
+            handleCloseDialog();
+            swal(result.message);
             setReload(true)
         } catch (error) {
             console.log(error);
@@ -61,23 +75,45 @@ const Edit = (props) => {
     }
     return (
         <div>
-            <h1>Update</h1>
-            <form>
-                <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} /><br />
-                <input type="text" value={content} onChange={(e) => setContent(e.target.value)} /><br />
-                <input type="file" value={imageInput} onChange={handleImageChange} /><br />
-                <img src={imagePreview ? imagePreview : imgloading} width={200} height={200} /><br />
-                <select value={topic_Id} onChange={(e) => setTopic_Id(e.target.value)}>
-                    {
-                        topics.map((item, index) => (
-                            <option value={item.id} key={index}>{item.name}</option>
-                        ))
-                    }
-                </select>
-                <br />
-                <button onClick={handleUpdateNews} type="button">Sửa</button>
 
-            </form>
+            <div>
+                <Button variant="primary" onClick={handleShowDialog}>
+                    Sửa
+                </Button>
+                <Modal show={showDialog} onHide={handleCloseDialog}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Edit News</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form>
+                            <Form.Group controlId="formBasicTitle">
+                                <Form.Label>Title</Form.Label>
+                                <Form.Control type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicContent">
+                                <Form.Label>Content</Form.Label>
+                                <Form.Control type="text" value={content} onChange={(e) => setContent(e.target.value)} />
+                            </Form.Group>
+                            <Form.Group controlId="formBasicImage">
+                                <Form.Label>Image</Form.Label>
+                                <Form.Control type="file" value={imageInput} onChange={handleImageChange} />
+                            </Form.Group>
+                            <img src={imagePreview ? imagePreview : imgloading} width={200} height={200} />
+                            <Form.Group controlId="formBasicTopic">
+                                <Form.Label>Topic</Form.Label>
+                                <Form.Control as="select" value={topic_Id} onChange={(e) => setTopic_Id(e.target.value)}>
+                                    {topics && topics.map((item, index) => (
+                                        <option value={item.id} key={index}>{item.name}</option>
+                                    ))}
+                                </Form.Control>
+                            </Form.Group>
+                            <Button variant="primary" onClick={handleUpdateNews}>
+                                Update
+                            </Button>
+                        </Form>
+                    </Modal.Body>
+                </Modal>
+            </div>
         </div>
     )
 }

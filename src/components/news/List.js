@@ -3,21 +3,15 @@ import AxiosInstance from "../helper/AxiosIntance";
 import Add from "./Add";
 import Edit from "./Edit";
 import swal from 'sweetalert';
-import Swal from 'react-sweetalert2';
 
 const List = (props) => {
     const { user, saveUser } = props;
     const [news, setNews] = useState([])
     const [reload, setReload] = useState(false);
-    const [newById, setNewById] = useState([]);
-    const [formAdd, setFormAdd] = useState("none");
-    const [formEdit, setFormEdit] = useState("none")
-    const [data, setData] = useState(null);
 
     useEffect(() => {
         const fetchData = async () => {
             const result = await AxiosInstance().get('/get-new.php');
-
             setNews(result);
         }
         fetchData();
@@ -50,44 +44,8 @@ const List = (props) => {
 
 
     }
-    const editNews = async (newsId, index) => {
-        const result = await AxiosInstance().get('/get-new-detail.php?id=' + newsId);
-        // setFormEdit("inline-block");
+    news.sort((a, b) => b.id - a.id);
 
-        for (let i = 0; i < news.length; i++) {
-
-            if (i == index) {
-                if (formAdd != "none") setFormAdd("none");
-                const viewEdit = document.getElementById("formEdit" + i);
-                viewEdit.style.display = "inline-block";
-            } else {
-                const viewEdit = document.getElementById("formEdit" + i);
-                viewEdit.style.display = "none";
-            }
-
-        }
-        setNewById(result);
-
-    }
-    const testEditNews = async () => {
-        console.log("open edit news");
-        swal.withForm({
-            title: 'Cool Swal-Forms example',
-            text: 'Any text that you consider useful for the form',
-            showCancelButton: true,
-            confirmButtonColor: '#DD6B55',
-            confirmButtonText: 'Get form data!',
-            closeOnConfirm: true,
-            formFields: [
-                { id: 'name', placeholder: 'Name Field', required: true },
-                { id: 'nickname', placeholder: 'Add a cool nickname' }
-            ]
-        }, function (isConfirm) {
-            // do whatever you want with the form data
-            console.log(this.swalForm) // { name: 'user name', nickname: 'what the user sends' }
-        })
-
-    }
     return (
         <div>
             <ul>
@@ -97,14 +55,8 @@ const List = (props) => {
                 <li><a href="#about">About</a></li>
                 <li style={{ position: "absolute", top: 11, right: 100 }}><button onClick={() => saveUser(null)}>Đăng xuất</button></li>
             </ul>
-            <div style={{ display: formAdd }}>
-                <Add user={user} setReload={setReload} />
-            </div>
-            <button style={{ marginTop: 10, display: formAdd == "none" ? "inline-block" : "none" }} onClick={() => { setFormAdd("inline-block"); editNews(0, -1) }}>Add</button><br />
+            <Add user={user} setReload={setReload} />
 
-            {/* <div style={{ display: formEdit }}>
-                <Edit newById={newById} user={user} />
-            </div> */}
 
             <h1>List news</h1>
             <table className='table'>
@@ -127,13 +79,9 @@ const List = (props) => {
                                 <td>{item.content}</td>
                                 <td>
 
-                                    <button className='btn btn-primary' value={item.id} onClick={(e) => testEditNews()}>Sửa</button>
+                                    <button className='btn btn-primary' style={{ padding: 0, marginRight: 5 }}><Edit setReload={setReload} user={user} id={item.id} /></button>
+                                    <button className='btn btn-danger' value={item.id} onClick={(e) => deleteNews(e.target.value)}>Xóa</button>
 
-                                    <button className='btn btn-danger' value={item.id} onClick={(e) => deleteNews(e.target.value)} >Xóa</button>
-                                    <br />
-                                    <div style={{ display: "none" }} id={"formEdit" + index}>
-                                        <Edit newById={newById} user={user} />
-                                    </div>
                                 </td>
 
 
@@ -141,6 +89,8 @@ const List = (props) => {
 
                         ))
                     }
+
+
                 </tbody>
 
             </table>

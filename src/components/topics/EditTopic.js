@@ -1,50 +1,71 @@
-import swal from "sweetalert";
 import AxiosInstance from "../helper/AxiosIntance";
 import React, { useState, useEffect } from "react";
+import { Button, Modal, Form } from 'react-bootstrap';
+import swal from 'sweetalert';
 
-const EditTopic = (props) => {
-    const { topicById, setReload } = props;
+const Edit = (props) => {
+    const { id, setReload } = props;
     const [name, setName] = useState('');
-    const [description, setDescription] = useState('')
+    const [description, setDescription] = useState('');
+    const [showDialog, setShowDialog] = useState(false);
 
+    const handleShowDialog = () => setShowDialog(true);
+    const handleCloseDialog = () => setShowDialog(false);
 
-    useEffect(() => {
-        const fetchData = () => {
-            setName(topicById.name);
-            setDescription(topicById.description);
-        }
-        fetchData();
-    }, [props]);
-    const handleUpdateTopic = async () => {
+    const handleUpdateData = async () => {
         try {
             if (!name || !description) {
-                swal("Vui lòng nhập đầy đủ thông tin");
+                alert("Vui lòng nhập đầy đủ thông tin");
                 return;
             }
             const body = {
                 name: name,
                 description: description
             }
-            const result = await AxiosInstance().post('/update-topics.php?id=' + topicById.id, body);
-            swal(result.message)
-            setReload(true)
+            const result = await AxiosInstance().post('/update-topics.php?id=' + id, body);
+            handleCloseDialog();
+            swal(result.message);
+            setReload(true);
         } catch (error) {
             console.log(error);
         }
-
     }
-    return (
-        <div>
-            <h1>Update</h1>
-            <form>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} /><br />
-                <input type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
-                <br />
-                <button onClick={handleUpdateTopic} type="button">Sửa</button>
+    useEffect(() => {
+        const fetchData = async () => {
+            const topicById = await AxiosInstance().get(`/get-topic-detail.php?id=${id}`);
+            setName(topicById.name);
+            setDescription(topicById.description);
+        }
+        fetchData();
+    }, [id]);
 
-            </form>
+    return (
+        <div >
+            <Button variant="primary" onClick={handleShowDialog}>
+                Sửa
+            </Button>
+            <Modal show={showDialog} onHide={handleCloseDialog}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Topic</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="formBasicName">
+                            <Form.Label>Name</Form.Label>
+                            <Form.Control type="text" value={name} onChange={(e) => setName(e.target.value)} />
+                        </Form.Group>
+                        <Form.Group controlId="formBasicDescription">
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
+                        </Form.Group>
+                        <Button variant="primary" onClick={handleUpdateData}>
+                            Update
+                        </Button>
+                    </Form>
+                </Modal.Body>
+            </Modal>
         </div>
     )
 }
 
-export default EditTopic;
+export default Edit;
