@@ -58,7 +58,7 @@ const Edit = (props) => {
                             <Form.Label>Description</Form.Label>
                             <Form.Control type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
                         </Form.Group>
-                        <Button variant="primary" onClick={handleUpdateData}>
+                        <Button style={{ marginTop: 13 }} variant="primary" onClick={handleUpdateData}>
                             Update
                         </Button>
                     </Form>

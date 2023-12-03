@@ -103,7 +103,7 @@ const Add = (props) => {
                                     }
                                 </Form.Control>
                             </Form.Group>
-                            <Button variant="primary" onClick={handleAdd}>Thêm</Button>
+                            <Button style={{ marginTop: 13 }} variant="primary" onClick={handleAdd}>Thêm</Button>
                         </Form>
                     </Modal.Body>
                 </Modal>

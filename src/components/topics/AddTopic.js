@@ -4,7 +4,7 @@ import swal from "sweetalert";
 import { Button, Modal, Form } from 'react-bootstrap';
 
 const AddTopic = (props) => {
-    const { setReload, setNotification } = props;
+    const { setReload } = props;
     const [name, setName] = useState(null);
     const [description, setDescription] = useState(null)
     const [showDialog, setShowDialog] = useState(false);
@@ -54,7 +54,7 @@ const AddTopic = (props) => {
                             <Form.Label>Description</Form.Label>
                             <Form.Control type="text" value={description} onChange={(e) => setDescription(e.target.value)} />
                         </Form.Group>
-                        <Button variant="primary" onClick={handleAddTopic}>
+                        <Button style={{ marginTop: 13 }} variant="primary" onClick={handleAddTopic}>
                             Thêm
                         </Button>
                     </Form>

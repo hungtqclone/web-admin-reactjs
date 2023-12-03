@@ -107,7 +107,7 @@ const Edit = (props) => {
                                     ))}
                                 </Form.Control>
                             </Form.Group>
-                            <Button variant="primary" onClick={handleUpdateNews}>
+                            <Button style={{ marginTop: 13 }} variant="primary" onClick={handleUpdateNews}>
                                 Update
                             </Button>
                         </Form>
